@@ -1,5 +1,20 @@
 @echo off
 title Corundum
+
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    goto home
+) else (
+    echo Corundum
+    echo.
+    echo [31mPlease run this script as an administrator![0m
+    echo If you can, contact your system administrator.
+    echo.
+    echo Press any key to exit.
+    pause > nul
+    exit
+)
+
 :home
 cls
 echo Welcome to Corundum!
@@ -11,8 +26,9 @@ echo 3. Update Windows and installed programs
 echo 4. Service management
 echo 5. Display system events
 echo 6. KMS management
-echo 7. Execute adwcleaner
+echo 7. Launch an utility
 echo 8. Start a program
+echo 9. Repair Windows
 echo.
 set /p choice="Enter your choice: "
 
@@ -22,8 +38,9 @@ if "%choice%"=="3" goto updateWinPrgm
 if "%choice%"=="4" goto serviceManagemnt
 if "%choice%"=="5" goto displayEvents
 if "%choice%"=="6" goto manageKMS
-if "%choice%"=="7" goto exadwcleaner
+if "%choice%"=="7" goto exutility
 if "%choice%"=="8" goto startProgram
+if "%choice%"=="9" goto repairWindows
 if "%choice%"=="v" goto displayVersion
 
 goto home
@@ -679,7 +696,7 @@ if errorlevel 1 (
 pause > nul
 goto manageKMS
 
-:exadwcleaner
+:adwCleaner
 cls
 echo Execute adwcleaner
 echo.
@@ -706,6 +723,217 @@ echo Press any key to return to home.
 pause > nul
 goto home
 
+:exutility
+cls
+echo Launch an utility
+echo.
+echo What type of utility would you like to launch?
+echo.
+echo 1. Online utility
+echo 2. Offline utility
+echo 3. Custom online utility
+if exist "%~dp0utility\custom" (
+    echo 4. Custom utility
+) else (
+    echo 4. Custom utility (Setup^)
+)
+echo 5. Exit
+echo.
+set /p utilityChoice="Enter your choice: "
+
+if "%utilityChoice%"=="1" goto onlineUtility
+if "%utilityChoice%"=="2" goto offlineUtility
+if "%utilityChoice%"=="3" goto customUtility
+if "%utilityChoice%"=="4" goto userUtility
+if "%utilityChoice%"=="5" goto home
+
+goto exutility
+
+:onlineUtility
+cls
+echo Launch an online utility
+echo.
+echo What utility do you want to start?
+echo.
+echo 1. Chris Titus Tools
+echo 2. Revert8Plus
+echo 3. Exit
+echo.
+set /p onlineUtilityChoice="Enter your choice: "
+
+if "%onlineUtilityChoice%"=="1" goto chrisTitusTools
+if "%onlineUtilityChoice%"=="2" goto revert8plus
+if "%onlineUtilityChoice%"=="3" goto exutility
+
+goto onlineUtility
+
+:chrisTitusTools
+cls
+echo Launch Chris Titus Tools
+echo.
+echo This action will open the Chris Titus Tools in a new Powershell window.
+echo.
+echo [31mThis tool is external, be careful![0m
+echo.
+echo Press any key to start Chris Titus Tools.
+pause > nul
+cls
+echo Launch Chris Titus Tools
+echo.
+echo Starting Chris Titus Tools, please wait.
+@REM start powershell -windowstyle -command "irm https://christitus.com/win | iex" > nul
+powershell -Command "Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -Command \"& {irm https://christitus.com/win | iex}\"' -Verb RunAs" > nul
+cls
+echo Launch Chris Titus Tools
+echo.
+echo Chris Titus Tools has been started successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:revert8plus
+cls
+echo Launch Revert8Plus
+echo.
+echo This action will open the Revert8Plus utility.
+echo This will transform your Windows 8.1 UI or Windows 10 UI into Windows 7 UI.
+echo.
+echo [31mThis tool is external, be careful![0m
+echo [31mPlease do a backup before launching.[0m
+echo.
+echo Press any key to start Revert8Plus.
+pause > nul
+cls
+echo Launch Revert8Plus
+echo.
+echo Starting Revert8Plus, please wait.
+@REM start powershell -windowstyle -command "irm https://christitus.com/win | iex" > nul
+powershell iex (irm r8p.teknixstuff.com)
+cls
+echo Launch Revert8Plus
+echo.
+echo Revert8Plus has been started successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:offlineUtility
+cls
+echo Launch an offline utility
+echo.
+echo What utility do you want to start?
+echo.
+@REM Check if the AdwCleaner utility is present, if it is, display it in the menu. If it is not, display "Not installed"
+if exist "%~dp0utility\adwcleaner.exe" (
+    echo 1. AdwCleaner
+) else (
+    echo 1. AdwCleaner (Not installed^)
+)
+
+echo 2. Exit
+echo.
+set /p offlineUtilityChoice="Enter your choice: "
+
+if "%offlineUtilityChoice%"=="1" goto adwCleaner
+if "%offlineUtilityChoice%"=="2" goto exutility
+
+goto offlineUtility
+
+:customUtility
+cls
+echo Launch a custom online utility
+echo.
+echo Type the URL of the utility you want to start.
+echo The utility need to be a Powershell script.
+echo.
+set /p customUtilityURL="Utility URL: "
+cls
+echo Launch a custom online utility
+echo.
+echo Starting the utility, please wait.
+start powershell -windowstyle -command "irm %customUtilityURL% | iex" > nul
+cls
+echo Launch a custom online utility
+echo.
+echo The utility has been started successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:userUtility
+cls
+echo Launch a custom utility
+echo.
+if exist "%~dp0utility\custom" (
+    echo What utility do you want to start?
+    echo.
+    setlocal enabledelayedexpansion
+    set "count=1"
+    set "found=0"
+    for /r "%~dp0utility\custom" %%G in (*.exe, *.bat, *.ps1) do (
+        echo !count!. %%~nG
+        set "utility!count!=%%G"
+        set /a "count+=1"
+        set "found=1"
+    )
+    if "!found!"=="0" (
+        echo No utilities found.
+        echo Press any key to return to home.
+        pause > nul
+        goto exutility
+    ) else (
+        echo !count!. Exit
+        set "utility!count!=Exit"
+        set /p choice="Enter your choice: "
+        for /l %%i in (1, 1, !count!) do (
+            if "!choice!"=="%%i" (
+                if "!utility%%i!"=="Exit" (
+                    goto exutility
+                ) else (
+                    start "" "!utility%%i!"
+                )
+            )
+        )
+    )
+    endlocal
+    pause > nul
+
+    goto userUtility
+) else (
+    echo No custom utility found.
+    echo.
+    echo Do you want to install a custom utility environment? (y/n^)
+    set /p installCustom="Enter your choice: "
+    if "%installCustom%"=="y" goto installCustom
+    if "%installCustom%"=="n" goto exutility
+)
+
+:installCustom
+cls
+echo Install a custom utility environement
+echo.
+echo This action will install a custom utility environement.
+echo This will take a few seconds.
+echo.
+echo Press any key to install the custom utility environement.
+pause > nul
+cls
+echo Install a custom utility environement
+echo.
+echo Installing the custom utility environement, please wait.
+mkdir "%~dp0utility\custom" > nul
+cls
+echo Install a custom utility environement
+echo.
+echo The custom utility environement has been installed successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
 :startProgram
 cls
 echo Start a program
@@ -723,12 +951,87 @@ echo Press any key to return to home.
 pause > nul
 goto home
 
+:repairWindows
+cls
+echo Repair Windows
+echo.
+echo Welcome to the Windows repair function!
+echo This function allows you to repair Windows.
+echo.
+echo What type of repair would you like to do?
+echo.
+echo 1. Automatic
+echo 2. Manual
+echo 3. Exit
+echo.
+set /p repairChoice="Enter your choice: "
+
+if "%repairChoice%"=="1" goto automaticRepair
+if "%repairChoice%"=="2" goto manualRepair
+if "%repairChoice%"=="3" goto home
+
+goto repairWindows
+
+:automaticRepair
+cls
+echo Automatic repair
+echo.
+echo Please disable your antivirus before starting the automatic repair.
+echo If Corundum was not started as an administrator, please restart it as an administrator.
+echo.
+echo This will execute sfc /scannow and dism /online /cleanup-image /restorehealth.
+echo This will take a few minutes.
+echo.
+echo Press any key to start the automatic repair.
+pause > nul
+cls
+echo Automatic repair
+echo.
+echo Starting the automatic repair, please wait.
+sfc /scannow > nul
+dism /online /cleanup-image /restorehealth > nul
+taskkill /f /im explorer.exe > nul
+start explorer.exe > nul
+cls
+echo Automatic repair
+echo.
+echo The automatic repair has been completed successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:manualRepair
+cls
+echo Manual repair
+echo.
+echo Please disable your antivirus before starting the manual repair.
+echo If Corundum was not started as an administrator, please restart it as an administrator.
+echo.
+echo Please, enter the commands you want to execute.
+echo The commands must be separated by &.
+echo.
+set /p manualCommand="Commands: "
+cls
+echo Manual repair
+echo.
+echo Starting the manual repair, please wait.
+start cmd /c %manualCommand%
+cls
+echo Manual repair
+echo.
+echo The manual repair has been executed successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
 :displayVersion
 cls
 echo Corumdum
 echo.
 echo Corundum is free, open-source software based on the GPL-3.0 license.
-echo Corundum is currently installed in version 1.0.0.
+echo Corundum is currently installed in version 1.1.0-beta.
 echo.
 echo Press any key to return to home.
 pause > nul
