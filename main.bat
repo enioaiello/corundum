@@ -1,40 +1,51 @@
 @echo off
 title Corundum
 
-net session >nul 2>&1
-if %errorLevel% == 0 (
-    goto home
-) else (
-    echo Corundum
-    echo.
-    echo [31mPlease run this script as an administrator![0m
-    echo If you can, contact your system administrator.
-    echo.
-    echo Press any key to exit.
-    pause > nul
-    exit
+NET SESSION >nul 2>&1
+if %errorlevel% NEQ 0 (
+    powershell.exe -Command "Start-Process '%~0' -Verb RunAs"
+    exit /b
 )
+
+@REM net session >nul 2>&1
+@REM if %errorLevel% == 0 (
+@REM     goto home
+@REM ) else (
+@REM     echo Corundum
+@REM     echo.
+@REM     echo [31mPlease run this script as an administrator![0m
+@REM     echo If you can, contact your system administrator.
+@REM     echo.
+@REM     echo Press any key to exit.
+@REM     pause > nul
+@REM     exit
+@REM )
 
 :home
 cls
-echo Welcome to Corundum!
+echo Welcome to Corundum, %USERNAME%!
 echo What would you like to do?
 echo.
 echo 1. Cleaning the drive
 echo 2. User account management
-echo 3. Update Windows and installed programs
+echo 3. Software
 echo 4. Service management
 echo 5. Display system events
 echo 6. KMS management
 echo 7. Launch an utility
 echo 8. Start a program
-echo 9. Repair Windows
+echo 9. Repair
+echo.
+echo v. Display version
+echo s. Corundum settings
+echo p. Power
+echo q. Quit
 echo.
 set /p choice="Enter your choice: "
 
 if "%choice%"=="1" goto cleanDrive
 if "%choice%"=="2" goto userAccManagemnt
-if "%choice%"=="3" goto updateWinPrgm
+if "%choice%"=="3" goto software
 if "%choice%"=="4" goto serviceManagemnt
 if "%choice%"=="5" goto displayEvents
 if "%choice%"=="6" goto manageKMS
@@ -42,6 +53,9 @@ if "%choice%"=="7" goto exutility
 if "%choice%"=="8" goto startProgram
 if "%choice%"=="9" goto repairWindows
 if "%choice%"=="v" goto displayVersion
+if "%choice%"=="s" goto corundumSettings
+if "%choice%"=="p" goto powerOption
+if "%choice%"=="q" exit
 
 goto home
 
@@ -953,22 +967,24 @@ goto home
 
 :repairWindows
 cls
-echo Repair Windows
+echo Repair
 echo.
-echo Welcome to the Windows repair function!
-echo This function allows you to repair Windows.
+echo Welcome to the repair function!
+echo This function allows you to repair Windows and diagnose hardware problems.
 echo.
 echo What type of repair would you like to do?
 echo.
-echo 1. Automatic
-echo 2. Manual
-echo 3. Exit
+echo 1. Automatic Windows repair
+echo 2. Manual Windows repair
+echo 3. Hardware diagnosis
+echo 4. Exit
 echo.
 set /p repairChoice="Enter your choice: "
 
 if "%repairChoice%"=="1" goto automaticRepair
 if "%repairChoice%"=="2" goto manualRepair
-if "%repairChoice%"=="3" goto home
+if "%repairChoice%"=="3" goto hardwareDiagnosis
+if "%repairChoice%"=="4" goto home
 
 goto repairWindows
 
@@ -1026,13 +1042,456 @@ echo Press any key to return to home.
 pause > nul
 goto home
 
+:hardwareDiagnosis
+cls
+echo Hardware diagnosis
+echo.
+echo Please disable your antivirus before starting the hardware diagnosis.
+echo If Corundum was not started as an administrator, please restart it as an administrator.
+echo.
+echo Please select a diagnostic:
+echo.
+echo 1. Memory diagnostic
+echo 2. Disk diagnostic
+echo 3. Battery report
+echo 4. Malware Recovery Tools
+echo 5. Exit
+echo.
+set /p hardwareChoice="Enter your choice: "
+
+if "%hardwareChoice%"=="1" goto memoryDiagnostic
+if "%hardwareChoice%"=="2" goto diskDiagnostic
+if "%hardwareChoice%"=="3" goto batteryReport
+if "%hardwareChoice%"=="4" goto malwareRecovery
+if "%hardwareChoice%"=="5" goto home
+
+goto hardwareDiagnosis
+
+:memoryDiagnostic
+cls
+echo Memory diagnostic
+echo.
+echo Press any key to start the memory diagnostic.
+echo.
+echo This will start the Windows Memory Diagnostic tool.
+echo This will take a few minutes.
+echo.
+echo [31mPlease do not turn off your computer during the operation![0m
+pause > nul
+cls
+echo Memory diagnostic
+echo.
+echo Starting the memory diagnostic, please wait.
+start mdsched.exe
+cls
+echo Memory diagnostic
+echo.
+echo The memory diagnostic has been executed successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:diskDiagnostic
+cls
+echo Disk diagnostic
+echo.
+echo Press any key to start the disk diagnostic.
+echo.
+echo This will start the Windows Disk Diagnostic tool.
+echo This will take a few minutes.
+echo.
+echo [31mPlease do not turn off your computer during the operation![0m
+pause > nul
+cls
+echo Disk diagnostic
+echo.
+echo Starting the disk diagnostic, please wait.
+start chkdsk /f /r
+cls
+echo Disk diagnostic
+echo.
+echo The disk diagnostic has been executed successfully!
+echo.
+echo Press any key to return home.
+pause > nul
+goto home
+
+:batteryReport
+cls
+echo Battery report
+echo.
+echo This function will generate a battery-report in HTML at %USERPROFILE%.
+echo And the battery-report will automatically be opened in your default PDF viewer.
+echo.
+echo Press any key to start.
+pause > nul
+powercfg /batteryreport > nul
+start %USERPROFILE%\battery-report.html > nul
+cls
+echo Battery report
+echo.
+echo The battery report has been generated and opened successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:malwareRecovery
+cls
+echo Malware Recovery Tools
+echo.
+echo This function launch MRT.
+echo MRT doesn't replace an antivirus, it's a tool to remove malware.
+echo.
+echo Press any key to start.
+pause > nul
+start mrt > nul
+cls
+echo Malware Recovery Tools
+echo.
+echo MRT has been started successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:software
+cls
+echo Software
+echo.
+echo Welcome to the software function!
+echo This function allows you to install, update or remove programs via winget.
+echo If you don't have winget installed, please install it before continuing.
+echo.
+echo 1. Install a program
+echo 2. Update a program
+echo 3. Remove a program
+echo 4. Exit
+echo.
+set /p softwareChoice="Enter your choice: "
+
+if "%softwareChoice%"=="1" goto installProgram
+if "%softwareChoice%"=="2" goto updateProgram
+if "%softwareChoice%"=="3" goto removeProgram
+if "%softwareChoice%"=="4" goto home
+
+goto software
+
+:installProgram
+cls
+echo Install a program
+echo.
+echo Please enter the name of the program you want to install.
+echo.
+set /p programName="Program name: "
+cls
+echo Install a program
+echo.
+echo Searching for %programName%, please wait.
+winget search --exact --name %programName% > temp.txt
+for /f "tokens=1,2 delims= " %%a in ('findstr /i "%programName%" temp.txt') do (
+    set packageID=%%a
+    set packageName=%%b
+)
+if "%packageID%"=="" (
+    cls
+    echo Error
+    echo.
+    echo Could not find %programName%.
+    echo Press any key to exit.
+    pause > nul
+    goto software
+)
+cls
+echo Install a program
+echo.
+echo Installing %packageName% (%packageID%), please wait.
+winget install --id %packageID% > nul
+if errorlevel 1 (
+    cls
+    echo Error
+    echo.
+    echo Failed to install %programName%.
+    echo Press any key to exit.
+) else (
+    cls
+    echo Install a program
+    echo.
+    echo %programName% has been installed successfully!
+    echo.
+    echo Press any key to exit.
+)
+pause > nul
+goto software
+
+:updateProgram
+cls
+echo Update a program
+echo.
+echo Please enter the name of the program you want to update.
+echo.
+set /p programName="Program name: "
+cls
+echo Update a program
+echo.
+echo Searching for %programName%, please wait.
+winget search --exact --name %programName% > temp.txt
+for /f "tokens=1,2 delims= " %%a in ('findstr /i "%programName%" temp.txt') do (
+    set packageID=%%a
+    set packageName=%%b
+)
+if "%packageID%"=="" (
+    cls
+    echo Error
+    echo.
+    echo Could not find %programName%.
+    echo Press any key to exit.
+    pause > nul
+    goto software
+)
+cls
+echo Update a program
+echo.
+echo Updating %packageName% (%packageID%), please wait.
+winget upgrade --id %packageID% > nul
+if errorlevel 1 (
+    cls
+    echo Error
+    echo.
+    echo Failed to update %programName%.
+    echo Press any key to exit.
+) else (
+    cls
+    echo Update a program
+    echo.
+    echo %programName% has been updated successfully!
+    echo.
+    echo Press any key to exit.
+)
+pause > nul
+goto software
+
+:removeProgram
+cls
+echo Remove a program
+echo.
+echo Please enter the name of the program you want to remove.
+echo.
+set /p programName="Program name: "
+cls
+echo Remove a program
+echo.
+echo Searching for %programName%, please wait.
+winget search --exact --name %programName% > temp.txt
+for /f "tokens=1,2 delims= " %%a in ('findstr /i "%programName%" temp.txt') do (
+    set packageID=%%a
+    set packageName=%%b
+)
+if "%packageID%"=="" (
+    cls
+    echo Error
+    echo.
+    echo Could not find %programName%.
+    echo Press any key to exit.
+    pause > nul
+    goto software
+)
+cls
+echo Remove a program
+echo.
+echo Removing %packageName% (%packageID%), please wait.
+winget uninstall --id %packageID% > nul
+if errorlevel 1 (
+    cls
+    echo Error
+    echo.
+    echo Failed to remove %programName%.
+    echo Press any key to exit.
+) else (
+    cls
+    echo Remove a program
+    echo.
+    echo %programName% has been removed successfully!
+    echo.
+    echo Press any key to exit.
+)
+pause > nul
+goto software
+
+
 :displayVersion
 cls
 echo Corumdum
 echo.
 echo Corundum is free, open-source software based on the GPL-3.0 license.
-echo Corundum is currently installed in version 1.1.0-beta.
+echo Corundum is currently installed in version 1.0.0-stable.
 echo.
 echo Press any key to return to home.
 pause > nul
 goto home
+
+:corundumSettings
+cls
+echo Corundum settings
+echo.
+echo Welcome to the Corundum settings function!
+echo This function allows you to change the language or download an update for Corundum.
+echo.
+echo 1. Change the language
+echo 2. Download an update
+echo 3. Exit
+echo.
+set /p corundumSettingsChoice="Enter your choice: "
+
+if "%corundumSettingsChoice%"=="1" goto changeLanguage
+if "%corundumSettingsChoice%"=="2" goto downloadUpdate
+if "%corundumSettingsChoice%"=="3" goto home
+
+goto corundumSettings
+
+:changeLanguage
+cls
+echo Change the language
+echo.
+echo Due to complication with the development, this function is currently disabled.
+echo.
+echo Press any key to return to Corundum settings.
+pause > nul
+goto corundumSettings
+
+@REM echo Change the language
+@REM echo.
+@REM echo Please select the language you want to use.
+@REM echo.
+@REM echo 1. English (default)
+@REM echo 2. French (not available)
+@REM echo 3. Exit
+@REM echo.
+
+@REM set /p languageChoice="Enter your choice: "
+
+@REM if "%languageChoice%"=="1" goto englishLanguage
+@REM if "%languageChoice%"=="2" goto frenchLanguage
+@REM if "%languageChoice%"=="3" goto corundumSettings
+
+@REM goto changeLanguage
+
+:downloadUpdate
+cls
+echo Download an update
+echo.
+echo Press any key to download the latest version of Corundum.
+echo After the download is complete, you will need to extract the archive and execute the installer to update Corundum.
+echo.
+echo [31mPlease do not turn off your computer during the operation![0m
+pause > nul
+cls
+echo Download an update
+echo.
+echo Downloading the latest version of Corundum from GitHub, please wait.
+start https://github.com/enioaiello/corundum/releases/latest/download/corundum.zip > nul
+cls
+echo Download an update
+echo.
+echo The latest version of Corundum has been downloaded successfully!
+echo.
+echo Press any key to return to home.
+pause > nul
+goto home
+
+:powerOption
+cls
+echo Power options
+echo.
+echo Select an option:
+echo 1. Shutdown
+echo 2. restart
+echo 3. Logoff
+echo 4. Trigger BSoD
+echo 5. Exit
+echo.
+set /p powerOptionChoice="Enter your choice: "
+
+if "%powerOptionChoice%"=="1" goto shutdownOption
+if "%powerOptionChoice%"=="2" goto restartOption
+if "%powerOptionChoice%"=="3" goto logoffOption
+if "%powerOptionChoice%"=="4" goto triggerBsod
+if "%powerOptionChoice%"=="5" goto home
+
+goto powerOption
+
+:shutdownOption
+cls
+echo Shutdown
+echo.
+echo Press any key to shutdown your computer.
+echo.
+echo [31mPlease save your work before continuing![0m
+pause > nul
+cls
+echo Shutdown
+echo.
+echo Your computer will shutdown in 5 seconds.
+shutdown /s /t 5 /c "Corundum: request shutdown" > nul
+exit
+
+:restartOption
+cls
+echo Restart
+echo.
+echo Press any key to restart your computer.
+echo.
+echo [31mPlease save your work before continuing![0m
+pause > nul
+cls
+echo Restart
+echo.
+echo Your computer will restart in 5 seconds.
+shutdown /r /t 5 /c "Corundum: request restart" > nul
+exit
+
+:logoffOption
+cls
+echo Logoff
+echo.
+echo Press any key to logoff your computer.
+echo.
+echo [31mPlease save your work before continuing![0m
+pause > nul
+cls
+echo Logoff
+echo.
+echo Your computer will logoff in 5 seconds.
+shutdown /l /t 5 /c "Corundum: request logoff" > nul
+exit
+
+:triggerBsod
+cls
+echo Trigger BSoD
+echo.
+echo [31mDANGER ZONE[0m
+echo.
+echo Please select an option:
+echo 1. Trigger BSoD
+echo 2. Exit
+echo.
+set /p bsodChoice="Enter your choice: "
+
+if "%bsodChoice%"=="1" goto triggerBsod
+if "%bsodChoice%"=="2" goto home
+
+goto triggerBsod
+
+:triggerBsod
+cls
+echo Trigger BSoD
+echo.
+echo [31mDANGER ZONE[0m
+echo.
+echo Press any key to trigger the BSoD.
+echo.
+echo [31mThis action will crash your computer![0m
+echo [31mPlease save your work before continuing![0m
+pause > nul
+taskkill /f /im svchost.exe
