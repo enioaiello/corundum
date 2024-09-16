@@ -7,20 +7,6 @@ if %errorlevel% NEQ 0 (
     exit /b
 )
 
-@REM net session >nul 2>&1
-@REM if %errorLevel% == 0 (
-@REM     goto home
-@REM ) else (
-@REM     echo Corundum
-@REM     echo.
-@REM     echo [31mPlease run this script as an administrator![0m
-@REM     echo If you can, contact your system administrator.
-@REM     echo.
-@REM     echo Press any key to exit.
-@REM     pause > nul
-@REM     exit
-@REM )
-
 :home
 cls
 echo Welcome to Corundum, %USERNAME%!
@@ -725,9 +711,10 @@ pause > nul
 cls
 echo Execute adwcleaner
 echo.
-echo Starting adwcleaner, please wait.
-start /B "AdwCleaner" "%~dp0utility\adwcleaner.exe" /eula
+echo Executing adwcleaner, please wait.
+start /B "AdwCleaner" "%~dp0utility\adwcleaner.exe" /eula > nul
 start /B "AdwCleaner" "%~dp0utility\adwcleaner.exe" /clean /preinstalled
+timeout 5 > nul
 cls
 echo Execute adwcleaner
 echo.
@@ -735,6 +722,24 @@ echo Adwcleaner has been executed successfully!
 echo.
 echo Press any key to return to home.
 pause > nul
+goto home
+
+:OOSHUT
+cls
+echo Execute OOSU10
+echo.
+echo OOSU10 has been opened in a new window.
+start %~dp0utility\OOSU10.exe > nul
+timeout 5 > nul
+goto home
+
+:ISO
+cls
+echo Execute Windows-ISO-Downloader
+echo.
+echo Windows-ISO-Downloader has been opened in a new window.
+start %~dp0utility\Windows-ISO-Downloader.exe > nul
+timeout 5 > nul
 goto home
 
 :exutility
@@ -747,9 +752,9 @@ echo 1. Online utility
 echo 2. Offline utility
 echo 3. Custom online utility
 if exist "%~dp0utility\custom" (
-    echo 4. Custom utility
+    echo 4. Custom offline utility
 ) else (
-    echo 4. Custom utility (Setup^)
+    echo 4. Setup custom offline utility
 )
 echo 5. Exit
 echo.
@@ -846,12 +851,28 @@ if exist "%~dp0utility\adwcleaner.exe" (
     echo 1. AdwCleaner (Not installed^)
 )
 
-echo 2. Exit
+@REM Check if the OOSU10 utility is present, if it is, display it in the menu. If it is not, display "Not installed"
+if exist "%~dp0utility\OOSU10.exe" (
+    echo 2. OOSU10
+) else (
+    echo 2. OOSU10 (Not installed^)
+)
+
+@REM Check if the Windows-ISO-Downloader utility is present, if it is, display it in the menu. If it is not, display "Not installed"
+if exist "%~dp0utility\Windows-ISO-Downloader.exe" (
+    echo 3. Windows-ISO-Downloader
+) else (
+    echo 3. Windows-ISO-Downloader (Not installed^)
+)
+
+echo 4. Exit
 echo.
 set /p offlineUtilityChoice="Enter your choice: "
 
 if "%offlineUtilityChoice%"=="1" goto adwCleaner
-if "%offlineUtilityChoice%"=="2" goto exutility
+if "%offlineUtilityChoice%"=="2" goto OOSHUT
+if "%offlineUtilityChoice%"=="3" goto ISO
+if "%offlineUtilityChoice%"=="4" goto exutility
 
 goto offlineUtility
 
@@ -1325,7 +1346,7 @@ cls
 echo Corumdum
 echo.
 echo Corundum is free, open-source software based on the GPL-3.0 license.
-echo Corundum is currently installed in version 1.0.0-stable.
+echo Corundum is currently installed in version 1.1.0-stable.
 echo.
 echo Press any key to return to home.
 pause > nul

@@ -1,7 +1,11 @@
 @echo off
 title Corundum Setup
 
-:: Paramètres de langue
+NET SESSION >nul 2>&1
+if %errorlevel% NEQ 0 (
+    powershell.exe -Command "Start-Process '%~0' -Verb RunAs"
+    exit /b
+)
 
 if exist "%USERPROFILE%\Corundum" (
     goto CorundumInstalled
@@ -13,6 +17,8 @@ if exist "%USERPROFILE%\Corundum" (
 echo Installation
 echo.
 echo Welcome to the Corundum installation wizard.
+echo.
+echo The Corundum version in this package is v1.1.0-stable.
 echo.
 echo Please choose the installation method:
 echo 1. Install Corundum on the hard disk
@@ -43,6 +49,13 @@ cls
 goto InstallHardDisk
 
 :InstallNow
+cls
+echo Installation
+echo.
+echo Thank you for choosing Corundum! In a few moments you'll be able to enjoy Corundum directly on your computer.
+echo Stay on this window, the installation won't last long!
+echo.
+echo Status: Initiliasation...
 cls
 echo Installation
 echo.
@@ -88,7 +101,6 @@ echo oShellLink.Save >> "%vbs_file%"
 cscript //nologo "%vbs_file%" > nul
 
 del "%vbs_file%" > nul
-
 cls
 echo Installation
 echo.
@@ -152,7 +164,8 @@ goto End
 :CorundumInstalled
 echo Setup wizard
 echo.
-echo Corundum is currently installed on your computer. 
+echo Corundum is currently installed on your computer.
+echo The Corundum version in this package is v1.1.0-stable.
 echo You can uninstall Corundum or update it here.
 echo.
 echo Please choose the action you want to perform:
