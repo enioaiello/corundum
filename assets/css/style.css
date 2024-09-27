@@ -1,0 +1,227 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    transition: 200ms ease-in-out;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body header {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 1%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+body header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body header nav ul {
+    display: flex;
+    list-style: none;
+}
+
+body header nav ul li {
+    margin: 0 10px;
+}
+
+body header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+body header nav ul li a:hover {
+    color: #f5f5f5aa;
+}
+
+body main {
+    flex: 1;
+}
+
+body main section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 2%;
+}
+
+body main section#title {
+    width: 100%;
+    height: 25vh;
+    background: url("../../assets/img/bg-light.jpg") no-repeat fixed center;
+    background-size: cover;
+    color: #fff;
+}
+
+body main section * {
+    margin: 2vh 0;
+}
+
+body main section#features ul {
+    width: 50%;
+    margin: 0 auto;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+body main section#features ul li {
+    text-align: center;
+    margin: 10px;
+}
+
+body main section#download a,
+body main section#documentation a,
+body main section#about a {
+    width: 15%;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+body main section#download a {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+body main section#download a:hover {
+    background-color: #f5f5f5aa;
+}
+
+body main section#documentation a,
+body main section#about a {
+    background-color: #333;
+    color: #fff;
+}
+
+body main section#documentation a:hover,
+body main section#about a:hover {
+    background-color: #444;
+}
+
+body main section#download {
+    background-color: #333;
+    color: #fff;
+    padding: 2%;
+    text-align: center;
+}
+
+body footer {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 1%;
+    text-align: center;
+}
+
+body footer a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.button {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 2% 5%;
+    margin: 0.5vh 0;
+    background-color: #40798c;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #40798caa;
+    color: white;
+    text-decoration: none;
+}
+
+.button.denied {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.button.semi {
+    width: 49%;
+}
+
+.articleContain {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+article {
+    display: flex;
+    flex-direction: column;
+    width: 49%;
+    background-color: #444444;
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 1%;
+    margin: 1% 0;
+    justify-content: center;
+    overflow: hidden;
+}
+
+article div.title {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+article div.title * {
+    margin-left: 10px;
+}
+
+article div.title img {
+    width: 64px;
+    height: 64px;
+}
+
+article * {
+    margin: 0.25vh 0;
+}
+
+article:hover {
+    transform: scale(1.025);
+    box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+}
+
+#content h2,
+#content h3,
+#content p,
+#content .button {
+    margin: 0;
+}
+
+article>.buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
