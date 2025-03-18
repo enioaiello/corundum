@@ -1,12 +1,11 @@
-<p align="center">
-<img src="assets/img/logo.png" height="128px">
-</p>
+# Corundum maintenance
 
-<h1 align="center">Corundum maintenance</h1>
+## About
+
+> [!IMPORTANT]
+> A redesign is underway.
 
 **Corundum maintenance** is a fantastic script for Microsoft Windows, enabling you to administer and maintain your workstation.
-
-> A redesign is underway.
 
 ## How to use
 
@@ -46,3 +45,12 @@ Go to [releases](https://github.com/CorundumProject/maintenance/releases/) and d
 | Windows 10       | ✅                         |
 | Windows 8.1      | ⚠️ (Require dependencies) |
 | Windows 7        | ⚠️ (Require dependencies) |
+
+## Collaboration
+
+If you wish to collaborate, you can make [Pull Request](https://github.com/CorundumProject/maintenance/pulls) or [Issues](https://github.com/CorundumProject/maintenance/issues).
+
+## Join the discussion
+
+- [Corundum Discord Server](https://discord.gg/jvK9p33FMW)
+- [Corundum GitHub Discussions](https://github.com/orgs/CorundumProject/discussions)
